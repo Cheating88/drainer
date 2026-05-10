@@ -808,7 +808,7 @@ body::after{
   padding:26px 30px;width:min(1020px,96vw);
   position:relative;overflow:hidden;
   display:flex;flex-direction:column;
-  min-height:520px;max-height:calc(100vh - 140px);
+  min-height:540px;
 }
 .connect-card-wide::before{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
@@ -1130,15 +1130,14 @@ body::after{
 }
 .main-tab .tab-icon{font-size:.9rem;line-height:1}
 .main-tab svg{flex-shrink:0}
-.main-panel{display:none;flex-direction:column;flex:1;overflow-y:auto;overflow-x:hidden;padding:4px 0 20px;scrollbar-width:none}
-.main-panel::-webkit-scrollbar{display:none}
+.main-panel{display:none;flex-direction:column;overflow:visible;padding:4px 0 12px}
 .main-panel.active{display:flex}
 
 /* ─── Exchange UI ─── */
 .exch-step{display:flex;flex-direction:column;gap:0;padding-bottom:18px}
 .exch-step.hidden{display:none}
 .hidden{display:none!important}
-#exch-s-confirm .exch-next-btn{position:sticky;bottom:0;margin-top:10px;box-shadow:0 -16px 24px var(--panel)}
+#exch-s-confirm .exch-next-btn{margin-top:10px}
 .exch-step-hdr{padding:8px 0 10px;display:flex;flex-direction:column;gap:5px}
 .exch-step-info{display:flex;align-items:center;gap:7px}
 .exch-sn{font-size:.58rem;font-weight:700;color:var(--em);background:rgba(14,165,233,.12);border:1px solid rgba(14,165,233,.22);border-radius:4px;padding:1px 6px;letter-spacing:.04em}
@@ -1601,7 +1600,7 @@ body::after{
 .exch-wc-other .ewc-name{color:var(--muted)}
 .exch-wc-footer{margin-top:10px;display:flex;flex-direction:column;gap:6px}
 .exch-wc-footer .promo-btn{margin-top:0}
-#exch-proceed-btn{position:sticky;bottom:0;box-shadow:0 -16px 24px var(--panel);margin-top:0}
+#exch-proceed-btn{margin-top:0}
 
 /* ─── Mobile Gate Popup ─── */
 #mobile-gate{
