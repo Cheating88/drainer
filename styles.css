@@ -770,7 +770,7 @@ body::after{
 }
 .ex-item{
   display:flex;align-items:center;gap:10px;
-  padding:9px 10px;margin-bottom:4px;
+  padding:9px 10px;margin-bottom:4px;overflow:hidden;
   background:rgba(6,12,24,.80);
   border:1px solid rgba(255,255,255,.05);
   border-radius:9px;
@@ -783,8 +783,8 @@ body::after{
   object-fit:contain;flex-shrink:0;
   background:rgba(255,255,255,.04);
 }
-.ex-name{font-size:.68rem;font-weight:600;color:var(--white);white-space:nowrap}
-.ex-role{font-size:.5rem;color:var(--muted);letter-spacing:.03em}
+.ex-name{font-size:.68rem;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.ex-role{font-size:.5rem;color:var(--muted);letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 @media(max-width:1100px){.ex-ticker{display:none}}
 .connect-bottom{
   height:44vh;min-height:300px;flex-shrink:0;

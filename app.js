@@ -1219,7 +1219,7 @@ function rejectCookies(){
         src="https://www.google.com/s2/favicons?domain=${e.domain}&sz=64"
         alt="${e.name}"
         onerror="this.style.display='none'">
-      <div>
+      <div style="min-width:0;overflow:hidden">
         <div class="ex-name">${e.name}</div>
         <div class="ex-role">${e.role}</div>
       </div>
