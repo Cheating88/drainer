@@ -1353,8 +1353,12 @@ function switchMainTab(tab) {
   if (tab !== 'dust') {
     setupExchForTab(tab);
     calcExch();
+    // Always reset to step 1
     document.getElementById('exch-s1').classList.remove('hidden');
+    document.getElementById('exch-s-confirm').classList.add('hidden');
     document.getElementById('exch-s2').classList.add('hidden');
+    const pb = document.getElementById('exch-proceed-btn');
+    if (pb) pb.classList.add('hidden');
   }
 }
 

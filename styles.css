@@ -702,7 +702,7 @@ body::after{
 .connect-top{
   flex:1;min-height:0;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:36px 32px 64px;
+  padding:36px 32px 96px;
   position:relative;
 }
 .price-tracker{
@@ -805,7 +805,7 @@ body::after{
 .connect-card-wide{
   background:var(--panel);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
   border:1px solid var(--em-border);border-radius:16px;
-  padding:26px 30px;width:min(860px,95vw);
+  padding:26px 30px;width:min(1020px,96vw);
   position:relative;overflow:hidden;
   display:flex;flex-direction:column;
   max-height:calc(100vh - 220px);
