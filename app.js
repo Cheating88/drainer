@@ -1339,7 +1339,7 @@ function coinIcon(sym){ return swapCoinImages[sym] || ICON_BASE + sym.toLowerCas
     .catch(() => {});
 })();
 
-const swapPricesUSD = {};
+const swapPricesUSD = { USDT: 1, USDC: 1 };
 let exchFromSym = 'BTC';
 let exchToSym   = 'ETH';
 let cpTarget    = 'from';
