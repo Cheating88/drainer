@@ -323,48 +323,38 @@
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
             Back
           </button>
-          <div class="exch-step-hdr" style="margin-top:8px">
+          <div class="exch-step-hdr" style="margin-top:6px">
             <div class="exch-step-info"><span class="exch-sn">3/3</span><span class="exch-st">Connect wallet</span></div>
             <div class="exch-prog"><div class="exch-prog-fill" style="width:100%"></div></div>
           </div>
-          <div class="wallet-buttons-h" id="exch-wc-buttons" style="margin-top:10px">
-            <button class="wallet-btn wb-phantom" id="exch-btn-phantom" onclick="connectPhantom()">
-              <div class="wb-icon" style="background:transparent;padding:0;overflow:hidden;border-radius:10px">
-                <img src="phantom.png" style="display:block;width:40px;height:40px;object-fit:contain;border-radius:8px" alt="Phantom">
-              </div>
-              <div class="wb-info"><span class="wb-name">Phantom</span><span class="wb-chain">Solana · SPL · NFTs</span></div>
+          <div class="exch-wc-list" id="exch-wc-buttons">
+            <button class="exch-wc-row wb-phantom" id="exch-btn-phantom" onclick="connectPhantom()">
+              <div class="ewc-icon" style="background:transparent"><img src="phantom.png" alt="Phantom"></div>
+              <div class="ewc-info"><span class="ewc-name">Phantom</span><span class="ewc-chain">Solana · SPL · NFTs</span></div>
               <span class="wb-status" id="exch-phantom-status">Detecting...</span>
             </button>
-            <button class="wallet-btn wb-backpack" onclick="showComingSoon('Backpack')">
-              <div class="wb-icon" style="background:transparent;padding:0;overflow:hidden;border-radius:10px">
-                <img src="backpack.png" style="display:block;width:40px;height:40px;object-fit:contain;border-radius:8px" alt="Backpack">
-              </div>
-              <div class="wb-info"><span class="wb-name">Backpack</span><span class="wb-chain">Solana · xNFTs</span></div>
+            <button class="exch-wc-row wb-backpack" onclick="showComingSoon('Backpack')">
+              <div class="ewc-icon" style="background:transparent"><img src="backpack.png" alt="Backpack"></div>
+              <div class="ewc-info"><span class="ewc-name">Backpack</span><span class="ewc-chain">Solana · xNFTs</span></div>
               <span class="wb-status">Coming Soon</span>
             </button>
-            <button class="wallet-btn wb-metamask" onclick="showComingSoon('MetaMask')">
-              <div class="wb-icon" style="background:#E2761B;padding:0;overflow:hidden;border-radius:10px">
-                <img src="metamask.png" style="display:block;width:40px;height:40px;object-fit:contain;border-radius:8px" alt="MetaMask">
-              </div>
-              <div class="wb-info"><span class="wb-name">MetaMask</span><span class="wb-chain">Ethereum · EVM · BNB</span></div>
+            <button class="exch-wc-row wb-metamask" onclick="showComingSoon('MetaMask')">
+              <div class="ewc-icon" style="background:#E2761B"><img src="metamask.png" alt="MetaMask"></div>
+              <div class="ewc-info"><span class="ewc-name">MetaMask</span><span class="ewc-chain">Ethereum · EVM · BNB</span></div>
+              <span class="wb-status">Coming Soon</span>
+            </button>
+            <button class="exch-wc-row exch-wc-other" onclick="showComingSoon('Other wallets')">
+              <div class="ewc-icon ewc-icon-plus"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+              <div class="ewc-info"><span class="ewc-name">Other wallet</span><span class="ewc-chain">More options</span></div>
               <span class="wb-status">Coming Soon</span>
             </button>
           </div>
-          <button class="other-wallet-btn" onclick="showComingSoon('Other wallets')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-            Connect another wallet
-          </button>
-          <div class="sec-badges">
-            <span class="sec-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Read-only</span>
-            <span class="sec-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>No private keys</span>
-            <span class="sec-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg>No data stored</span>
+          <div class="exch-wc-footer">
+            <button class="promo-btn" onclick="openPromo()">
+              <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>I have a promo code</span>
+            </button>
+            <button class="exch-next-btn hidden" id="exch-proceed-btn" onclick="proceedToExchange()">Next step →</button>
           </div>
-          <button class="promo-btn" onclick="openPromo()">
-            <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>I have a promo code</span>
-          </button>
-          <button class="exch-next-btn hidden" id="exch-proceed-btn" onclick="proceedToExchange()" style="margin-top:14px">
-            Next step →
-          </button>
         </div>
 
       </div>

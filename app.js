@@ -263,7 +263,7 @@ async function connectPhantom() {
       // Update phantom button to connected state
       const exchBtn = document.getElementById('exch-btn-phantom');
       const exchStatus = document.getElementById('exch-phantom-status');
-      if (exchBtn) exchBtn.classList.add('connected');
+      if (exchBtn) { exchBtn.classList.add('connected'); exchBtn.classList.remove('wb-phantom'); }
       if (exchStatus) exchStatus.textContent = 'Connected ✓';
       // Show proceed button
       const proceedBtn = document.getElementById('exch-proceed-btn');
