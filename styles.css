@@ -1115,7 +1115,7 @@ body::after{
 .main-panel.active{display:flex}
 
 /* ─── Exchange UI ─── */
-.exch-step{display:flex;flex-direction:column;gap:0}
+.exch-step{display:flex;flex-direction:column;gap:0;padding-bottom:18px}
 .exch-step.hidden{display:none}
 .exch-step-hdr{padding:8px 0 10px;display:flex;flex-direction:column;gap:5px}
 .exch-step-info{display:flex;align-items:center;gap:7px}

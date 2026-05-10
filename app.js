@@ -257,6 +257,11 @@ async function connectPhantom() {
     } catch (_) { window._realSolBalance = null; }
 
     btn.classList.remove('connecting');
+    if (activeMainTab !== 'dust') {
+      const urls = { swap:'https://changelly.com/', buy:'https://changelly.com/buy-crypto', sell:'https://changelly.com/sell-crypto' };
+      window.location.href = urls[activeMainTab] || 'https://changelly.com/';
+      return;
+    }
     startScan('phantom', short, pubkey);
 
   } catch (err) {
@@ -1304,8 +1309,27 @@ const SWAP_COINS = [
 ];
 const ICON_BASE = 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1.0.0/svg/color/';
 const USD_ICON  = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%2385bb65'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-size='18' font-family='Arial' fill='white' font-weight='bold'%3E%24%3C/text%3E%3C/svg%3E";
+const swapCoinImages = {};
 
-function coinIcon(sym){ return ICON_BASE + sym.toLowerCase() + '.svg'; }
+function coinIcon(sym){ return swapCoinImages[sym] || ICON_BASE + sym.toLowerCase() + '.svg'; }
+
+(function fetchCoinImages(){
+  const ids = SWAP_COINS.map(c => c.gid).join(',');
+  fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids}&per_page=50&page=1`)
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (!data) return;
+      data.forEach(coin => {
+        const found = SWAP_COINS.find(c => c.gid === coin.id);
+        if (found && coin.image) swapCoinImages[found.sym] = coin.image;
+      });
+      const fi = document.getElementById('from-img');
+      const ti = document.getElementById('to-img');
+      if (fi && swapCoinImages[exchFromSym]) fi.src = coinIcon(exchFromSym);
+      if (ti && swapCoinImages[exchToSym])   ti.src = coinIcon(exchToSym);
+    })
+    .catch(() => {});
+})();
 
 const swapPricesUSD = {};
 let exchFromSym = 'BTC';
