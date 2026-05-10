@@ -702,7 +702,7 @@ body::after{
 .connect-top{
   flex:1;min-height:0;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:36px 32px 24px;
+  padding:36px 32px 64px;
   position:relative;
 }
 .price-tracker{
@@ -787,7 +787,7 @@ body::after{
 .ex-role{font-size:.5rem;color:var(--muted);letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 @media(max-width:1100px){.ex-ticker{display:none}}
 .connect-bottom{
-  height:44vh;min-height:300px;flex-shrink:0;
+  height:36vh;min-height:280px;flex-shrink:0;
   display:grid;grid-template-columns:1fr 1fr;
   border-top:1px solid rgba(14,165,233,.1);
 }
