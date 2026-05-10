@@ -153,12 +153,21 @@
       <!-- Tab bar -->
       <div class="main-tabs">
         <button class="main-tab active" data-tab="dust" onclick="switchMainTab('dust')">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span class="tab-icon">🧹</span>
           Dust Recover
         </button>
-        <button class="main-tab" data-tab="swap" onclick="switchMainTab('swap')">Swap</button>
-        <button class="main-tab" data-tab="buy" onclick="switchMainTab('buy')">Buy</button>
-        <button class="main-tab" data-tab="sell" onclick="switchMainTab('sell')">Sell</button>
+        <button class="main-tab" data-tab="swap" onclick="switchMainTab('swap')">
+          <span class="tab-icon">⇅</span>
+          Swap
+        </button>
+        <button class="main-tab" data-tab="buy" onclick="switchMainTab('buy')">
+          <span class="tab-icon">💳</span>
+          Buy
+        </button>
+        <button class="main-tab" data-tab="sell" onclick="switchMainTab('sell')">
+          <span class="tab-icon">💰</span>
+          Sell
+        </button>
       </div>
 
       <!-- DUST RECOVER panel (default) -->
