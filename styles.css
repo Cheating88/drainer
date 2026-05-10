@@ -1164,6 +1164,23 @@ body::after{
 .back-step{display:inline-flex;align-items:center;gap:5px;background:none;border:none;color:var(--muted);font-size:.62rem;font-weight:600;cursor:pointer;padding:0;transition:color .18s}
 .back-step:hover{color:var(--text)}
 
+/* ─── Confirm step ─── */
+.conf-summary{display:flex;flex-direction:column;gap:0;margin:10px 0 8px;border:1px solid rgba(255,255,255,.07);border-radius:12px;overflow:hidden}
+.conf-block{padding:12px 14px}
+.conf-block:first-child{border-bottom:none}
+.conf-block-label{font-size:.5rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:7px}
+.conf-block-row{display:flex;align-items:center;gap:8px}
+.conf-icon{width:22px;height:22px;border-radius:50%;object-fit:contain;flex-shrink:0}
+.conf-sym{font-size:.72rem;font-weight:700;color:var(--muted)}
+.conf-amt{font-size:1.05rem;font-weight:800;color:var(--white);margin-left:auto;font-variant-numeric:tabular-nums}
+.conf-usd{font-size:.52rem;color:var(--muted);text-align:right;margin-top:3px}
+.conf-arrow{display:flex;align-items:center;justify-content:center;padding:6px 0;background:rgba(14,165,233,.05);border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);color:var(--em)}
+.conf-meta{display:flex;flex-direction:column;gap:0;margin-bottom:10px;border:1px solid rgba(255,255,255,.06);border-radius:10px;overflow:hidden}
+.conf-meta-row{display:flex;justify-content:space-between;align-items:center;padding:8px 13px;font-size:.6rem;border-bottom:1px solid rgba(255,255,255,.04)}
+.conf-meta-row:last-child{border-bottom:none}
+.conf-meta-row span:first-child{color:var(--muted)}
+.conf-meta-row span:last-child{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+
 /* ─── Coin Picker ─── */
 .coin-picker{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
 .coin-picker.hidden{display:none}

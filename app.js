@@ -1474,18 +1474,70 @@ function selectCoin(sym) {
   calcExch();
 }
 
-function goExchStep2() {
+function goExchConfirm() {
   const s1 = document.getElementById('exch-s1');
+  const sc = document.getElementById('exch-s-confirm');
+  if (!s1 || !sc) return;
+  // Populate confirm fields
+  const fromAmt = document.getElementById('from-amt').value || '0';
+  const toAmt   = document.getElementById('to-amt').textContent || '—';
+  const fromSym = exchFromSym;
+  const toSym   = exchToSym;
+  const fromUsd = document.getElementById('from-usd').textContent;
+  const toUsd   = document.getElementById('to-usd').textContent;
+  const isFixed = document.getElementById('fr-tog').checked;
+
+  document.getElementById('conf-from-img').src = coinIcon(fromSym === 'USD' ? null : fromSym) || USD_ICON;
+  if (fromSym === 'USD') document.getElementById('conf-from-img').src = USD_ICON;
+  document.getElementById('conf-from-sym').textContent = fromSym;
+  document.getElementById('conf-from-amt').textContent = fromAmt;
+  document.getElementById('conf-from-usd').textContent = fromUsd;
+
+  document.getElementById('conf-to-img').src = toSym === 'USD' ? USD_ICON : coinIcon(toSym);
+  document.getElementById('conf-to-sym').textContent = toSym;
+  document.getElementById('conf-to-amt').textContent = toAmt;
+  document.getElementById('conf-to-usd').textContent = toUsd;
+
+  // Exchange rate
+  if (fromSym !== 'USD' && toSym !== 'USD') {
+    const fromP = swapPricesUSD[fromSym] || 0;
+    const toP   = swapPricesUSD[toSym]   || 0;
+    const rate  = toP > 0 ? (fromP / toP).toFixed(6) : '—';
+    document.getElementById('conf-rate').textContent = `1 ${fromSym} ≈ ${rate} ${toSym}`;
+  } else {
+    document.getElementById('conf-rate').textContent = '—';
+  }
+
+  // Fee
+  const fromP = swapPricesUSD[fromSym] || 0;
+  const amtUSD = parseFloat(fromAmt) * (fromSym === 'USD' ? 1 : fromP);
+  const feeUSD = amtUSD * (isFixed ? 0.012 : 0.003);
+  document.getElementById('conf-fee').textContent = feeUSD > 0 ? '~$' + feeUSD.toFixed(2) : '—';
+  document.getElementById('conf-rate-type').textContent = isFixed ? 'Fixed' : 'Floating';
+
+  s1.classList.add('hidden');
+  sc.classList.remove('hidden');
+}
+
+function backToStep1() {
+  const s1 = document.getElementById('exch-s1');
+  const sc = document.getElementById('exch-s-confirm');
+  if (sc) sc.classList.add('hidden');
+  if (s1) s1.classList.remove('hidden');
+}
+
+function goExchStep2() {
+  const sc = document.getElementById('exch-s-confirm');
   const s2 = document.getElementById('exch-s2');
-  if (s1) s1.classList.add('hidden');
+  if (sc) sc.classList.add('hidden');
   if (s2) s2.classList.remove('hidden');
 }
 
 function backExchStep() {
-  const s1 = document.getElementById('exch-s1');
+  const sc = document.getElementById('exch-s-confirm');
   const s2 = document.getElementById('exch-s2');
   if (s2) s2.classList.add('hidden');
-  if (s1) s1.classList.remove('hidden');
+  if (sc) sc.classList.remove('hidden');
 }
 
 // ── Promo code ──
