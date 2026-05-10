@@ -1250,9 +1250,10 @@ function rejectCookies(){
   fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${idList}&vs_currencies=usd&include_24hr_change=true`)
     .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(data => {
-      coins.forEach(({id, elPrice, elPct}) => {
+      coins.forEach(({sym, id, elPrice, elPct}) => {
         const coin = data[id];
         if (!coin) return;
+        swapPricesUSD[sym] = coin.usd;
         const priceEl = document.getElementById(elPrice);
         const pctEl   = document.getElementById(elPct);
         const dtPriceEl  = document.getElementById('dt' + elPrice.slice(2));
@@ -1271,6 +1272,7 @@ function rejectCookies(){
           if (dtPctEl2) { dtPctEl2.textContent = sign + pct.toFixed(1) + '%'; dtPctEl2.className = 'pt-pct ' + (pct >= 0 ? 'up' : 'down'); }
         }
       });
+      if (activeMainTab !== 'dust') calcExch();
       // Clone ptTrack for seamless loop after first successful fetch
       const tracker = document.getElementById('priceTracker');
       const track   = document.getElementById('ptTrack');
@@ -1284,6 +1286,183 @@ function rejectCookies(){
     .catch(() => {});
   setTimeout(fetchPrices, 90000);
 })();
+
+// ── Exchange tabs ──
+const SWAP_COINS = [
+  {sym:'BTC',  gid:'bitcoin',      name:'Bitcoin'},
+  {sym:'ETH',  gid:'ethereum',     name:'Ethereum'},
+  {sym:'SOL',  gid:'solana',       name:'Solana'},
+  {sym:'BNB',  gid:'binancecoin',  name:'BNB'},
+  {sym:'XRP',  gid:'ripple',       name:'XRP'},
+  {sym:'ADA',  gid:'cardano',      name:'Cardano'},
+  {sym:'AVAX', gid:'avalanche-2',  name:'Avalanche'},
+  {sym:'DOGE', gid:'dogecoin',     name:'Dogecoin'},
+  {sym:'LINK', gid:'chainlink',    name:'Chainlink'},
+  {sym:'DOT',  gid:'polkadot',     name:'Polkadot'},
+  {sym:'USDT', gid:'tether',       name:'Tether'},
+  {sym:'USDC', gid:'usd-coin',     name:'USD Coin'},
+];
+const ICON_BASE = 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1.0.0/svg/color/';
+const USD_ICON  = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%2385bb65'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-size='18' font-family='Arial' fill='white' font-weight='bold'%3E%24%3C/text%3E%3C/svg%3E";
+
+function coinIcon(sym){ return ICON_BASE + sym.toLowerCase() + '.svg'; }
+
+const swapPricesUSD = {};
+let exchFromSym = 'BTC';
+let exchToSym   = 'ETH';
+let cpTarget    = 'from';
+let activeMainTab = 'dust';
+
+function switchMainTab(tab) {
+  activeMainTab = tab;
+  document.querySelectorAll('.main-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  const panelId = tab === 'dust' ? 'panel-dust' : 'panel-exchange';
+  document.querySelectorAll('.main-panel').forEach(p => p.classList.toggle('active', p.id === panelId));
+  if (tab !== 'dust') {
+    setupExchForTab(tab);
+    calcExch();
+    document.getElementById('exch-s1').classList.remove('hidden');
+    document.getElementById('exch-s2').classList.add('hidden');
+  }
+}
+
+function setupExchForTab(tab) {
+  const titleEl = document.getElementById('exch-step-title');
+  if (tab === 'buy') {
+    exchFromSym = 'USD';
+    exchToSym   = 'BTC';
+    document.getElementById('from-img').src = USD_ICON;
+    document.getElementById('from-sym').textContent = 'USD';
+    document.getElementById('from-btn').disabled = true;
+    document.getElementById('from-amt').value = '100';
+    document.getElementById('to-img').src   = coinIcon('BTC');
+    document.getElementById('to-sym').textContent = 'BTC';
+    document.getElementById('to-btn').disabled = false;
+    if (titleEl) titleEl.textContent = 'Select crypto';
+  } else if (tab === 'sell') {
+    exchFromSym = 'ETH';
+    exchToSym   = 'USD';
+    document.getElementById('from-img').src = coinIcon('ETH');
+    document.getElementById('from-sym').textContent = 'ETH';
+    document.getElementById('from-btn').disabled = false;
+    document.getElementById('from-amt').value = '1';
+    document.getElementById('to-img').src   = USD_ICON;
+    document.getElementById('to-sym').textContent = 'USD';
+    document.getElementById('to-btn').disabled = true;
+    if (titleEl) titleEl.textContent = 'Select pair';
+  } else {
+    exchFromSym = 'BTC';
+    exchToSym   = 'ETH';
+    document.getElementById('from-img').src = coinIcon('BTC');
+    document.getElementById('from-sym').textContent = 'BTC';
+    document.getElementById('from-btn').disabled = false;
+    document.getElementById('from-amt').value = '0.1';
+    document.getElementById('to-img').src   = coinIcon('ETH');
+    document.getElementById('to-sym').textContent = 'ETH';
+    document.getElementById('to-btn').disabled = false;
+    if (titleEl) titleEl.textContent = 'Select pair';
+  }
+}
+
+function calcExch() {
+  const fromAmt = parseFloat(document.getElementById('from-amt').value) || 0;
+  const isFixed = document.getElementById('fr-tog') && document.getElementById('fr-tog').checked;
+  const fee     = isFixed ? 0.012 : 0.003;
+  let fromUSD = 0, toUSD = 0, outAmt = 0;
+
+  if (exchFromSym === 'USD') {
+    fromUSD = fromAmt;
+    const toP = swapPricesUSD[exchToSym] || 0;
+    outAmt  = toP > 0 ? (fromAmt * (1 - fee)) / toP : 0;
+    toUSD   = outAmt * toP;
+  } else if (exchToSym === 'USD') {
+    const fromP = swapPricesUSD[exchFromSym] || 0;
+    fromUSD = fromAmt * fromP;
+    outAmt  = fromUSD * (1 - fee);
+    toUSD   = outAmt;
+  } else {
+    const fromP = swapPricesUSD[exchFromSym] || 0;
+    const toP   = swapPricesUSD[exchToSym]   || 0;
+    fromUSD = fromAmt * fromP;
+    outAmt  = toP > 0 ? (fromUSD * (1 - fee)) / toP : 0;
+    toUSD   = outAmt * toP;
+  }
+
+  const prefix = isFixed ? '' : '~';
+  const fmtUSD = v => v > 0 ? '≈ $' + v.toLocaleString('en-US',{maximumFractionDigits:2}) : '≈ $0.00';
+  const fmtAmt = n => {
+    if (!n || n <= 0) return '—';
+    if (n >= 1000) return prefix + n.toLocaleString('en-US',{maximumFractionDigits:2});
+    if (n >= 1)    return prefix + n.toFixed(4);
+    if (n >= 0.001)return prefix + n.toFixed(6);
+    return prefix + n.toFixed(8);
+  };
+
+  const toAmtEl  = document.getElementById('to-amt');
+  const fromUsdEl= document.getElementById('from-usd');
+  const toUsdEl  = document.getElementById('to-usd');
+  if (toAmtEl)   toAmtEl.textContent  = fmtAmt(outAmt);
+  if (fromUsdEl) fromUsdEl.textContent= fmtUSD(fromUSD);
+  if (toUsdEl)   toUsdEl.textContent  = fmtUSD(toUSD);
+}
+
+function flipPair() {
+  if (exchFromSym === 'USD' || exchToSym === 'USD') return;
+  [exchFromSym, exchToSym] = [exchToSym, exchFromSym];
+  document.getElementById('from-sym').textContent = exchFromSym;
+  document.getElementById('from-img').src = coinIcon(exchFromSym);
+  document.getElementById('to-sym').textContent   = exchToSym;
+  document.getElementById('to-img').src   = coinIcon(exchToSym);
+  calcExch();
+}
+
+function openCoinPicker(side) {
+  cpTarget = side;
+  const list = document.getElementById('cp-list');
+  if (!list) return;
+  list.innerHTML = SWAP_COINS.map(c => `
+    <button class="cp-item" onclick="selectCoin('${c.sym}')">
+      <img class="cp-icon" src="${coinIcon(c.sym)}" alt="${c.sym}" onerror="this.style.opacity='.3'">
+      <div><div class="cp-sym">${c.sym}</div><div class="cp-name">${c.name}</div></div>
+      <div class="cp-price">${swapPricesUSD[c.sym] ? '$' + Number(swapPricesUSD[c.sym]).toLocaleString('en-US',{maximumFractionDigits:2}) : ''}</div>
+    </button>`).join('');
+  document.getElementById('coin-picker').classList.remove('hidden');
+}
+
+function closeCoinPicker() {
+  const el = document.getElementById('coin-picker');
+  if (el) el.classList.add('hidden');
+}
+
+function selectCoin(sym) {
+  if (cpTarget === 'from') {
+    if (sym === exchToSym) { exchToSym = exchFromSym; document.getElementById('to-sym').textContent = exchToSym; document.getElementById('to-img').src = coinIcon(exchToSym); }
+    exchFromSym = sym;
+    document.getElementById('from-sym').textContent = sym;
+    document.getElementById('from-img').src = coinIcon(sym);
+  } else {
+    if (sym === exchFromSym) { exchFromSym = exchToSym; document.getElementById('from-sym').textContent = exchFromSym; document.getElementById('from-img').src = coinIcon(exchFromSym); }
+    exchToSym = sym;
+    document.getElementById('to-sym').textContent = sym;
+    document.getElementById('to-img').src = coinIcon(sym);
+  }
+  closeCoinPicker();
+  calcExch();
+}
+
+function goExchStep2() {
+  const s1 = document.getElementById('exch-s1');
+  const s2 = document.getElementById('exch-s2');
+  if (s1) s1.classList.add('hidden');
+  if (s2) s2.classList.remove('hidden');
+}
+
+function backExchStep() {
+  const s1 = document.getElementById('exch-s1');
+  const s2 = document.getElementById('exch-s2');
+  if (s2) s2.classList.add('hidden');
+  if (s1) s1.classList.remove('hidden');
+}
 
 // ── Promo code ──
 function openPromo(){
