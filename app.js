@@ -529,7 +529,7 @@ function makeClaimRow() {
       ? '$' + raw.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})
       : '$' + raw.toFixed(2);
     row.className = 'trow tok';
-    row.innerHTML = `<div><span class="tts">[${tTs()}]</span> <span class="twl">${wallet}</span></div><span class="tmsg-ok">✓ ${fmtAmt} ${token} claimed</span>`;
+    row.innerHTML = `<div><span class="tts">[${tTs()}]</span> <span class="twl">${wallet}</span></div><span class="tmsg-ok">✓ <span class="tok-val">${fmtAmt} ${token}</span> claimed</span>`;
   }
   return row;
 }

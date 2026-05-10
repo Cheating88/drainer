@@ -679,7 +679,8 @@ body::after{
 .trow.twrn{border-left-color:var(--amber)}
 .tts{color:var(--muted);font-size:.59rem;font-weight:400}
 .twl{color:var(--text);font-weight:600;font-size:.67rem}
-.tmsg-ok {display:block;color:var(--em);margin-top:2px}
+.tmsg-ok {display:block;color:var(--text);margin-top:2px}
+.tok-val{color:#22c55e;font-weight:700}
 .tmsg-err{display:block;color:var(--red);margin-top:2px}
 .tmsg-wrn{display:block;color:var(--amber);margin-top:2px}
 
