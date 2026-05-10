@@ -707,7 +707,7 @@ body::after{
 }
 .price-tracker{
   position:absolute;left:16px;top:16px;bottom:16px;
-  width:190px;overflow:hidden;
+  width:240px;overflow:hidden;
   display:flex;flex-direction:column;
   mask-image:linear-gradient(to bottom,transparent 0%,black 6%,black 94%,transparent 100%);
   -webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 6%,black 94%,transparent 100%);
@@ -750,7 +750,7 @@ body::after{
 /* ─── Exchange Ticker ─── */
 .ex-ticker{
   position:absolute;right:16px;top:16px;bottom:16px;
-  width:190px;overflow:hidden;
+  width:240px;overflow:hidden;
   display:flex;flex-direction:column;
   mask-image:linear-gradient(to bottom,transparent 0%,black 6%,black 94%,transparent 100%);
   -webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 6%,black 94%,transparent 100%);
