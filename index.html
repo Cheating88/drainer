@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CryptoResidual — Multi-Chain Token Swap & Dust Asset Recovery</title>
+
+<!-- SEO -->
+<meta name="description" content="CryptoResidual is the fastest multi-chain token swapper and dust asset consolidation platform. Recover forgotten balances across Ethereum, Solana, BNB Chain and Aptos in seconds.">
+<meta name="keywords" content="crypto swap, token swap, dust recovery, residual assets, defi, ethereum swap, solana swap, uniswap alternative, jupiter aggregator, multi-chain, best crypto swap, low fee swap">
+<meta name="robots" content="index, follow">
+<meta name="author" content="CryptoResidual">
+<link rel="canonical" href="https://cryptoresidual.io/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://cryptoresidual.io/">
+<meta property="og:title" content="CryptoResidual — Swap Tokens & Recover Dust Assets">
+<meta property="og:description" content="The smartest multi-chain swapper. Detect and consolidate dust assets across all major networks. Best rates, lowest fees.">
+<meta property="og:image" content="https://cryptoresidual.io/og-image.png">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@CryptoResidual">
+<meta name="twitter:title" content="CryptoResidual — Multi-Chain Token Swap">
+<meta name="twitter:description" content="Recover your dust. Swap at the best rates. One platform, all chains.">
+
+<!-- Performance -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="theme-color" content="#06080D">
+
+<!-- Security -->
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "CryptoResidual",
+  "url": "https://cryptoresidual.io",
+  "description": "Multi-chain token swapper and dust asset recovery platform",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23060C18'/%3E%3Cpath d='M16 2.5L18.8 13.2L29.5 16L18.8 18.8L16 29.5L13.2 18.8L2.5 16L13.2 13.2Z' fill='%230EA5E9' opacity='.9'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%2338BDF8' opacity='.95'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Wallet address stream background -->
+<canvas id="wc"></canvas>
+<!-- Node network -->
+<canvas id="nc"></canvas>
+<!-- Custom cursor -->
+<div id="cur-ring"></div>
+<div id="cur">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Outer 4-point star -->
+    <path d="M12 0.5L13.8 10.2L23.5 12L13.8 13.8L12 23.5L10.2 13.8L0.5 12L10.2 10.2Z" fill="#00D68F" opacity=".85"/>
+    <!-- Inner bright star -->
+    <path d="M12 5.5L13.2 10.8L18.5 12L13.2 13.2L12 18.5L10.8 13.2L5.5 12L10.8 10.8Z" fill="#00FFB3" opacity=".95"/>
+    <!-- Center dot -->
+    <circle cx="12" cy="12" r="2.5" fill="white" opacity=".95"/>
+  </svg>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 1 · CONNECT WALLET
+══════════════════════════════════════════════ -->
+<section class="screen active" id="screen-connect">
+
+  <!-- TOP: Brand + horizontal wallet card -->
+  <div class="connect-top">
+    <div class="price-tracker" id="priceTracker">
+      <div class="pt-track" id="ptTrack">
+        <div class="pt-card pt-btc">
+          <div class="pt-row1"><span class="pt-name">BTC</span><span class="pt-pct" id="ptPctBTC">—</span></div>
+          <div class="pt-price" id="ptPriceBTC">—</div>
+          <div class="pt-label">24h change</div>
+        </div>
+        <div class="pt-card pt-eth">
+          <div class="pt-row1"><span class="pt-name">ETH</span><span class="pt-pct" id="ptPctETH">—</span></div>
+          <div class="pt-price" id="ptPriceETH">—</div>
+          <div class="pt-label">24h change</div>
+        </div>
+        <div class="pt-card pt-sol">
+          <div class="pt-row1"><span class="pt-name">SOL</span><span class="pt-pct" id="ptPctSOL">—</span></div>
+          <div class="pt-price" id="ptPriceSOL">—</div>
+          <div class="pt-label">24h change</div>
+        </div>
+        <div class="pt-card pt-bnb">
+          <div class="pt-row1"><span class="pt-name">BNB</span><span class="pt-pct" id="ptPctBNB">—</span></div>
+          <div class="pt-price" id="ptPriceBNB">—</div>
+          <div class="pt-label">24h change</div>
+        </div>
+        <div class="pt-card pt-xrp">
+          <div class="pt-row1"><span class="pt-name">XRP</span><span class="pt-pct" id="ptPctXRP">—</span></div>
+          <div class="pt-price" id="ptPriceXRP">—</div>
+          <div class="pt-label">24h change</div>
+        </div>
+        <div class="pt-card pt-ada">
+          <div class="pt-row1"><span class="pt-name">ADA</span><span class="pt-pct" id="ptPctADA">—</span></div>
+          <div class="pt-price" id="ptPriceADA">—</div>
+          <div class="pt-label">24h change</div>
+        </div>
+        <div class="pt-card pt-avax">
+          <div class="pt-row1"><span class="pt-name">AVAX</span><span class="pt-pct" id="ptPctAVAX">—</span></div>
+          <div class="pt-price" id="ptPriceAVAX">—</div>
+          <div class="pt-label">24h change</div>
+        </div>
+        <div class="pt-card pt-doge">
+          <div class="pt-row1"><span class="pt-name">DOGE</span><span class="pt-pct" id="ptPctDOGE">—</span></div>
+          <div class="pt-price" id="ptPriceDOGE">—</div>
+          <div class="pt-label">24h change</div>
+        </div>
+        <div class="pt-card pt-link">
+          <div class="pt-row1"><span class="pt-name">LINK</span><span class="pt-pct" id="ptPctLINK">—</span></div>
+          <div class="pt-price" id="ptPriceLINK">—</div>
+          <div class="pt-label">24h change</div>
+        </div>
+        <div class="pt-card pt-dot">
+          <div class="pt-row1"><span class="pt-name">DOT</span><span class="pt-pct" id="ptPctDOT">—</span></div>
+          <div class="pt-price" id="ptPriceDOT">—</div>
+          <div class="pt-label">24h change</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exchange collaborators ticker -->
+    <div class="ex-ticker">
+      <div class="ex-hdr">Colaboradores</div>
+      <div class="ex-track" id="exTrack"></div>
+    </div>
+
+    <div class="brand">
+      <div class="brand-name">Crypto<span>Residual</span></div>
+      <div class="brand-powered">Powered by <strong>NichePrint</strong></div>
+    </div>
+
+    <div class="feed-section-hdr">
+      <h2 class="fsh-title">Recover <em>every dollar</em> you've ever spent on <em>transaction fees</em> — across all chains, in seconds</h2>
+    </div>
+
+    <div class="connect-card-wide">
+      <div class="cw-header">
+        <h2>Connect Your Wallet</h2>
+        <p>Scan all your chains. Recover forgotten dust.<br>Read-only — no keys, no signatures.</p>
+      </div>
+
+      <div class="wallet-buttons-h">
+        <!-- Phantom -->
+        <button class="wallet-btn wb-phantom" id="btn-phantom" onclick="connectPhantom()">
+          <div class="wb-icon" style="background:transparent;padding:0;overflow:hidden;border-radius:10px">
+            <img src="phantom.png" style="display:block;width:40px;height:40px;object-fit:contain;border-radius:8px" alt="Phantom">
+          </div>
+          <div class="wb-info">
+            <span class="wb-name">Phantom</span>
+            <span class="wb-chain">Solana · SPL · NFTs</span>
+          </div>
+          <span class="wb-status" id="phantom-status">Detecting...</span>
+        </button>
+
+        <!-- Backpack -->
+        <button class="wallet-btn wb-backpack" onclick="showComingSoon('Backpack')">
+          <div class="wb-icon" style="background:transparent;padding:0;overflow:hidden;border-radius:10px">
+            <img src="backpack.png" style="display:block;width:40px;height:40px;object-fit:contain;border-radius:8px" alt="Backpack">
+          </div>
+          <div class="wb-info">
+            <span class="wb-name">Backpack</span>
+            <span class="wb-chain">Solana · xNFTs</span>
+          </div>
+          <span class="wb-status">Coming Soon</span>
+        </button>
+
+        <!-- MetaMask -->
+        <button class="wallet-btn wb-metamask" onclick="showComingSoon('MetaMask')">
+          <div class="wb-icon" style="background:#E2761B;padding:0;overflow:hidden;border-radius:10px">
+            <img src="metamask.png" style="display:block;width:40px;height:40px;object-fit:contain;border-radius:8px" alt="MetaMask">
+          </div>
+          <div class="wb-info">
+            <span class="wb-name">MetaMask</span>
+            <span class="wb-chain">Ethereum · EVM · BNB</span>
+          </div>
+          <span class="wb-status">Coming Soon</span>
+        </button>
+      </div>
+
+      <button class="other-wallet-btn" onclick="showComingSoon('Other wallets')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Connect another wallet
+      </button>
+
+      <div class="sec-badges">
+        <span class="sec-badge">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Read-only
+        </span>
+        <span class="sec-badge">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          No private keys
+        </span>
+        <span class="sec-badge">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg>
+          No data stored
+        </span>
+      </div>
+      <button class="promo-btn" onclick="openPromo()">
+        <span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+          I have a promo code
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Promo code popup -->
+  <div id="promo-overlay" class="promo-overlay hidden" onclick="if(event.target===this)closePromo()">
+    <div class="promo-modal">
+      <div class="promo-modal-hdr">
+        <span class="promo-modal-title">Enter promo code</span>
+        <button class="promo-close" onclick="closePromo()">✕</button>
+      </div>
+      <div class="promo-input-wrap">
+        <input id="promo-input" class="promo-input" type="text" placeholder="XXXX-XXXX-XXXX" maxlength="24" spellcheck="false" autocomplete="off">
+      </div>
+      <div id="promo-error" class="promo-error hidden">Invalid promo code</div>
+      <button class="promo-apply" onclick="applyPromo()">Apply</button>
+    </div>
+  </div>
+
+  <!-- BOTTOM: Forum left | Terminal right -->
+  <div class="connect-bottom">
+
+    <!-- Forum Panel (left) -->
+    <div class="connect-forum-panel">
+      <div class="tw-hdr">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color:#e7e9ea;flex-shrink:0"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        <span class="tw-hdr-title">Crypto Twitter</span>
+        <span class="tw-hdr-live"><span class="live-dot"></span>Live</span>
+      </div>
+      <div class="tw-feed">
+
+        <!-- @cobie -->
+        <div class="tw">
+          <img class="tw-av" src="LnAG7hpJ_400x400.jpg" alt="cobie">
+          <div class="tw-main">
+            <div class="tw-meta">
+              <span class="tw-name">cobie</span>
+              <svg class="tw-badge" viewBox="0 0 22 22"><circle cx="11" cy="11" r="11" fill="#1d9bf0"/><path fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M7 11.5l3 3 5-5.5"/></svg>
+              <span class="tw-handle">@cobie</span>
+              <span class="tw-time">· 23m</span>
+            </div>
+            <div class="tw-body">spent the last two weeks perfecting a scalping setup on SOL perps — went from basically flat to up ~$800. then cleaned up all my leftover positions from 2022 using <span class="tw-tag">CryptoResidual</span> and recovered another $340 i had completely forgotten about. solid week overall</div>
+            <div class="tw-actions">
+              <span class="tw-act"><svg viewBox="0 0 24 24"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 7.501 3.58 7.501 8 0 4.09-2.515 7.12-5.876 7.765L12 21l-1.832-1.829c-.44.017-.89.017-1.338 0C4.825 18.77 1.751 15.6 1.751 10Z"/></svg>142</span>
+              <span class="tw-act"><svg viewBox="0 0 24 24"><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88ZM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2Z"/></svg>2.1k</span>
+              <span class="tw-act tw-act-like"><svg viewBox="0 0 24 24"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91Z"/></svg>18.4k</span>
+              <span class="tw-act tw-act-views"><svg viewBox="0 0 24 24"><path d="M8.75 21V3h2v18h-2ZM18 21V8.5h2V21h-2ZM4 21l.004-10h2L6 21H4Zm9.248 0v-7h2v7h-2Z"/></svg>1.2M</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- @DegenSpartan -->
+        <div class="tw">
+          <img class="tw-av" src="Mg9s14-l_400x400.jpg" alt="DS">
+          <div class="tw-main">
+            <div class="tw-meta">
+              <span class="tw-name">Degen Spartan</span>
+              <span class="tw-handle">@DegenSpartan</span>
+              <span class="tw-time">· 1h</span>
+            </div>
+            <div class="tw-body">everyone's obsessing over the next narrative while sitting on hundreds in dead wallet positions. i cleared out 3 years of scattered tokens last month — $620 recovered via <span class="tw-tag">CryptoResidual</span>. rotated straight into my current conviction. stop leaving free money on the table</div>
+            <div class="tw-actions">
+              <span class="tw-act"><svg viewBox="0 0 24 24"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 7.501 3.58 7.501 8 0 4.09-2.515 7.12-5.876 7.765L12 21l-1.832-1.829c-.44.017-.89.017-1.338 0C4.825 18.77 1.751 15.6 1.751 10Z"/></svg>389</span>
+              <span class="tw-act"><svg viewBox="0 0 24 24"><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88ZM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2Z"/></svg>4.8k</span>
+              <span class="tw-act tw-act-like"><svg viewBox="0 0 24 24"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91Z"/></svg>22.8k</span>
+              <span class="tw-act tw-act-views"><svg viewBox="0 0 24 24"><path d="M8.75 21V3h2v18h-2ZM18 21V8.5h2V21h-2ZM4 21l.004-10h2L6 21H4Zm9.248 0v-7h2v7h-2Z"/></svg>3.4M</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- @0xfoobar -->
+        <div class="tw">
+          <img class="tw-av" src="OOdLC0zL_400x400.jpg" alt="fx">
+          <div class="tw-main">
+            <div class="tw-meta">
+              <span class="tw-name">foobar</span>
+              <svg class="tw-badge" viewBox="0 0 22 22"><circle cx="11" cy="11" r="11" fill="#1d9bf0"/><path fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M7 11.5l3 3 5-5.5"/></svg>
+              <span class="tw-handle">@0xfoobar</span>
+              <span class="tw-time">· 3h</span>
+            </div>
+            <div class="tw-body">audited 6 wallets i used during the 2021-2022 hackathon season. most had tiny token balances i never touched. batched everything through <span class="tw-tag">CryptoResidual</span> — single tx, no custody, ~$190 net recovered after fees. the UX is actually clean. worth doing if you were active back then</div>
+            <div class="tw-actions">
+              <span class="tw-act"><svg viewBox="0 0 24 24"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 7.501 3.58 7.501 8 0 4.09-2.515 7.12-5.876 7.765L12 21l-1.832-1.829c-.44.017-.89.017-1.338 0C4.825 18.77 1.751 15.6 1.751 10Z"/></svg>207</span>
+              <span class="tw-act"><svg viewBox="0 0 24 24"><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88ZM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2Z"/></svg>1.3k</span>
+              <span class="tw-act tw-act-like"><svg viewBox="0 0 24 24"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91Z"/></svg>9.1k</span>
+              <span class="tw-act tw-act-views"><svg viewBox="0 0 24 24"><path d="M8.75 21V3h2v18h-2ZM18 21V8.5h2V21h-2ZM4 21l.004-10h2L6 21H4Zm9.248 0v-7h2v7h-2Z"/></svg>890k</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- @Murad -->
+        <div class="tw">
+          <img class="tw-av" src="https://api.dicebear.com/7.x/initials/svg?seed=M&backgroundColor=f59e0b&textColor=ffffff" alt="M">
+          <div class="tw-main">
+            <div class="tw-meta">
+              <span class="tw-name">Murad</span>
+              <svg class="tw-badge" viewBox="0 0 22 22"><circle cx="11" cy="11" r="11" fill="#f5b942"/><path fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M7 11.5l3 3 5-5.5"/></svg>
+              <span class="tw-handle">@MustStopMurad</span>
+              <span class="tw-time">· 5h</span>
+            </div>
+            <div class="tw-body">conviction is simple: hold the strongest memes, cut everything else without mercy. went through every wallet i've touched since 2020 and liquidated all the dead weight. <span class="tw-tag">CryptoResidual</span> handled the dust recovery across chains — came out with $580 extra to redeploy into my real thesis positions</div>
+            <div class="tw-actions">
+              <span class="tw-act"><svg viewBox="0 0 24 24"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 7.501 3.58 7.501 8 0 4.09-2.515 7.12-5.876 7.765L12 21l-1.832-1.829c-.44.017-.89.017-1.338 0C4.825 18.77 1.751 15.6 1.751 10Z"/></svg>512</span>
+              <span class="tw-act"><svg viewBox="0 0 24 24"><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88ZM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2Z"/></svg>6.2k</span>
+              <span class="tw-act tw-act-like"><svg viewBox="0 0 24 24"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91Z"/></svg>44.1k</span>
+              <span class="tw-act tw-act-views"><svg viewBox="0 0 24 24"><path d="M8.75 21V3h2v18h-2ZM18 21V8.5h2V21h-2ZM4 21l.004-10h2L6 21H4Zm9.248 0v-7h2v7h-2Z"/></svg>4.8M</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- @hsaka -->
+        <div class="tw">
+          <img class="tw-av" src="YH9wk8Qy_400x400.jpg" alt="H">
+          <div class="tw-main">
+            <div class="tw-meta">
+              <span class="tw-name">Hsaka</span>
+              <svg class="tw-badge" viewBox="0 0 22 22"><circle cx="11" cy="11" r="11" fill="#1d9bf0"/><path fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M7 11.5l3 3 5-5.5"/></svg>
+              <span class="tw-handle">@HsakaTrades</span>
+              <span class="tw-time">· 7h</span>
+            </div>
+            <div class="tw-body">rough week — got chopped up on the ETH range twice and stopped out of my AVAX long. recovered some ground by running <span class="tw-tag">CryptoResidual</span> on my graveyard wallets. $290 in old positions i'd written off. not glamorous but it's real money. on to next week</div>
+            <div class="tw-actions">
+              <span class="tw-act"><svg viewBox="0 0 24 24"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 7.501 3.58 7.501 8 0 4.09-2.515 7.12-5.876 7.765L12 21l-1.832-1.829c-.44.017-.89.017-1.338 0C4.825 18.77 1.751 15.6 1.751 10Z"/></svg>318</span>
+              <span class="tw-act"><svg viewBox="0 0 24 24"><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88ZM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2Z"/></svg>3.4k</span>
+              <span class="tw-act tw-act-like"><svg viewBox="0 0 24 24"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91Z"/></svg>14.8k</span>
+              <span class="tw-act tw-act-views"><svg viewBox="0 0 24 24"><path d="M8.75 21V3h2v18h-2ZM18 21V8.5h2V21h-2ZM4 21l.004-10h2L6 21H4Zm9.248 0v-7h2v7h-2Z"/></svg>1.1M</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- @inversebrah -->
+        <div class="tw">
+          <img class="tw-av" src="vttPTJa0_400x400.jpg" alt="ib">
+          <div class="tw-main">
+            <div class="tw-meta">
+              <span class="tw-name">inversebrah</span>
+              <svg class="tw-badge" viewBox="0 0 22 22"><circle cx="11" cy="11" r="11" fill="#f5b942"/><path fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M7 11.5l3 3 5-5.5"/></svg>
+              <span class="tw-handle">@inversebrah</span>
+              <span class="tw-time">· 9h</span>
+            </div>
+            <div class="tw-body">people spending hours hunting 2x plays while ignoring $400 sitting idle in wallets from 2021. cleaned mine out last week using <span class="tw-tag">CryptoResidual</span>. that's not even alpha it's just basic hygiene at this point. the market will humble you, your own wallets don't have to</div>
+            <div class="tw-actions">
+              <span class="tw-act"><svg viewBox="0 0 24 24"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 7.501 3.58 7.501 8 0 4.09-2.515 7.12-5.876 7.765L12 21l-1.832-1.829c-.44.017-.89.017-1.338 0C4.825 18.77 1.751 15.6 1.751 10Z"/></svg>741</span>
+              <span class="tw-act"><svg viewBox="0 0 24 24"><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88ZM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2Z"/></svg>9.1k</span>
+              <span class="tw-act tw-act-like"><svg viewBox="0 0 24 24"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91Z"/></svg>58.3k</span>
+              <span class="tw-act tw-act-views"><svg viewBox="0 0 24 24"><path d="M8.75 21V3h2v18h-2ZM18 21V8.5h2V21h-2ZM4 21l.004-10h2L6 21H4Zm9.248 0v-7h2v7h-2Z"/></svg>7.2M</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- @CryptoKaleo -->
+        <div class="tw">
+          <img class="tw-av" src="6me8SrkX_400x400.jpg" alt="K">
+          <div class="tw-main">
+            <div class="tw-meta">
+              <span class="tw-name">Kaleo</span>
+              <svg class="tw-badge" viewBox="0 0 22 22"><circle cx="11" cy="11" r="11" fill="#1d9bf0"/><path fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M7 11.5l3 3 5-5.5"/></svg>
+              <span class="tw-handle">@CryptoKaleo</span>
+              <span class="tw-time">· 12h</span>
+            </div>
+            <div class="tw-body">BTC dominance heading exactly where i called it. trimming alts systematically, rebuilding positions at key levels. also did my quarterly wallet audit — <span class="tw-tag">CryptoResidual</span> pulled $430 in old token dust across ETH and SOL. small things add up when you're positioning for what comes next</div>
+            <div class="tw-actions">
+              <span class="tw-act"><svg viewBox="0 0 24 24"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 7.501 3.58 7.501 8 0 4.09-2.515 7.12-5.876 7.765L12 21l-1.832-1.829c-.44.017-.89.017-1.338 0C4.825 18.77 1.751 15.6 1.751 10Z"/></svg>934</span>
+              <span class="tw-act"><svg viewBox="0 0 24 24"><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88ZM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2Z"/></svg>18.4k</span>
+              <span class="tw-act tw-act-like"><svg viewBox="0 0 24 24"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91Z"/></svg>112k</span>
+              <span class="tw-act tw-act-views"><svg viewBox="0 0 24 24"><path d="M8.75 21V3h2v18h-2ZM18 21V8.5h2V21h-2ZM4 21l.004-10h2L6 21H4Zm9.248 0v-7h2v7h-2Z"/></svg>9.8M</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- @PentoshI -->
+        <div class="tw">
+          <img class="tw-av" src="s2jPKe5g_400x400.jpg" alt="P">
+          <div class="tw-main">
+            <div class="tw-meta">
+              <span class="tw-name">Pentoshi</span>
+              <svg class="tw-badge" viewBox="0 0 22 22"><circle cx="11" cy="11" r="11" fill="#1d9bf0"/><path fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M7 11.5l3 3 5-5.5"/></svg>
+              <span class="tw-handle">@PentoshI</span>
+              <span class="tw-time">· 1d</span>
+            </div>
+            <div class="tw-body">prepping for what i think is a significant move over the next 2-3 months. step 1: size into conviction. step 2: cut dead weight. step 3: recover the forgotten stuff — used <span class="tw-tag">CryptoResidual</span> for this, found $487 across wallets i hadn't touched since 2022. step 4: patience. that's the whole playbook</div>
+            <div class="tw-actions">
+              <span class="tw-act"><svg viewBox="0 0 24 24"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 7.501 3.58 7.501 8 0 4.09-2.515 7.12-5.876 7.765L12 21l-1.832-1.829c-.44.017-.89.017-1.338 0C4.825 18.77 1.751 15.6 1.751 10Z"/></svg>287</span>
+              <span class="tw-act"><svg viewBox="0 0 24 24"><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88ZM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2Z"/></svg>4.1k</span>
+              <span class="tw-act tw-act-like"><svg viewBox="0 0 24 24"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91Z"/></svg>33.6k</span>
+              <span class="tw-act tw-act-views"><svg viewBox="0 0 24 24"><path d="M8.75 21V3h2v18h-2ZM18 21V8.5h2V21h-2ZM4 21l.004-10h2L6 21H4Zm9.248 0v-7h2v7h-2Z"/></svg>2.7M</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Live Claims Terminal (right) -->
+    <div class="connect-terminal-panel">
+      <div class="ct-hdr">
+        <span class="ct-hdr-title">Live Claims Feed</span>
+        <span class="tw-hdr-live" style="margin-left:auto"><span class="live-dot"></span>Live</span>
+      </div>
+      <div class="ct-body" id="ctBody"></div>
+    </div>
+
+  </div>
+
+
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 2 · SCANNING
+══════════════════════════════════════════════ -->
+<section class="screen" id="screen-scanning">
+  <div class="scan-header">
+    <div class="scan-label">Scanning wallet</div>
+    <div class="scan-address" id="scanAddr">0x742d35...f44e</div>
+  </div>
+
+  <div class="scan-layout">
+    <!-- Chain Progress Panel -->
+    <div class="scan-panel">
+      <div class="scan-panel-title">Indexing blockchain networks</div>
+      <div class="chain-rows">
+        <div class="chain-row">
+          <div class="chain-meta">
+            <span class="chain-name"><span class="chain-dot eth"></span>Ethereum Mainnet</span>
+            <span class="chain-pct" id="pct-eth">0%</span>
+          </div>
+          <div class="chain-track"><div class="chain-fill fill-eth" id="bar-eth"></div></div>
+        </div>
+        <div class="chain-row">
+          <div class="chain-meta">
+            <span class="chain-name"><span class="chain-dot sol"></span>Solana</span>
+            <span class="chain-pct" id="pct-sol">0%</span>
+          </div>
+          <div class="chain-track"><div class="chain-fill fill-sol" id="bar-sol"></div></div>
+        </div>
+        <div class="chain-row">
+          <div class="chain-meta">
+            <span class="chain-name"><span class="chain-dot bsc"></span>BNB Smart Chain</span>
+            <span class="chain-pct" id="pct-bsc">0%</span>
+          </div>
+          <div class="chain-track"><div class="chain-fill fill-bsc" id="bar-bsc"></div></div>
+        </div>
+        <div class="chain-row">
+          <div class="chain-meta">
+            <span class="chain-name"><span class="chain-dot apt"></span>Aptos</span>
+            <span class="chain-pct" id="pct-apt">0%</span>
+          </div>
+          <div class="chain-track"><div class="chain-fill fill-apt" id="bar-apt"></div></div>
+        </div>
+      </div>
+
+      <div class="term-log" id="termLog">
+        <span class="log-ln info" id="l0">&gt; Initializing blockchain scanner...<span class="cur"></span></span>
+        <span class="log-ln ok"  id="l1"></span>
+        <span class="log-ln info" id="l2"></span>
+        <span class="log-ln ok"  id="l3"></span>
+        <span class="log-ln info" id="l4"></span>
+        <span class="log-ln ok"  id="l5"></span>
+        <span class="log-ln warn" id="l6"></span>
+      </div>
+    </div>
+
+    <!-- Live Stats Panel -->
+    <div class="scan-panel">
+      <div class="scan-panel-title">Live statistics</div>
+      <div class="scan-stats">
+        <div class="scan-stat">
+          <div class="ss-val" id="stTokens">0</div>
+          <div class="ss-lbl">Tokens</div>
+        </div>
+        <div class="scan-stat">
+          <div class="ss-val" id="stDust">0</div>
+          <div class="ss-lbl">Dust Assets</div>
+        </div>
+        <div class="scan-stat">
+          <div class="ss-val" id="stNets">0</div>
+          <div class="ss-lbl">Networks</div>
+        </div>
+        <div class="scan-stat">
+          <div class="ss-val" id="stVal">$0.00</div>
+          <div class="ss-lbl">Est. value</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 3 · DASHBOARD
+══════════════════════════════════════════════ -->
+<section class="screen" id="screen-dashboard">
+  <nav class="dash-nav">
+    <div class="dash-nav-left">
+      <button class="dash-back-btn" onclick="disconnect()"><span class="back-arrow">←</span> Back</button>
+    </div>
+    <span class="dash-logo">Crypto<span>Residual</span></span>
+    <div class="nav-right">
+      <div class="conn-pill">
+        <span class="live-dot"></span>
+        <span id="dashAddr">0x742d35...f44e</span>
+      </div>
+      <button class="disc-btn" onclick="disconnect()">Disconnect</button>
+    </div>
+  </nav>
+
+  <!-- Live Claims Terminal Sidebar -->
+  <div id="live-terminal">
+    <div class="term-hdr">
+      <span class="term-hdr-title">Live Claims</span>
+      <span class="term-hdr-live"><span class="live-dot"></span>LIVE</span>
+    </div>
+    <div class="term-body" id="termBody"></div>
+  </div>
+
+  <div class="dash-body">
+
+    <!-- Hero Metrics -->
+    <div class="hero-metrics fu fu1">
+      <div class="hm-card hm-total">
+        <div class="hm-label">Total detected value</div>
+        <div class="hm-value amber" id="m-total">$4.19</div>
+        <div class="hm-sub">live market prices</div>
+      </div>
+      <div class="hm-card hm-recover">
+        <div class="hm-label">Net recoverable</div>
+        <div class="hm-value em" id="m-recover">$2.95</div>
+        <div class="hm-sub">estimated after gas fees</div>
+      </div>
+    </div>
+
+    <!-- Dust summary -->
+    <div class="dust-summary fu fu2">
+      <span class="ds-icon">◈</span>
+      <strong id="m-dust">8</strong><span>dust assets across 4 networks</span>
+      <span class="ds-sep">·</span>
+      <span class="ds-tokens">SHIB · PEPE · FLOKI · BONK · WIF · SAMO · CAKE · APT</span>
+    </div>
+
+    <!-- Hero Consolidation Route -->
+    <div class="sec-title fu fu3">Optimal consolidation route</div>
+    <div class="cr-card-hero fu fu3">
+      <div class="hero-route-badge">⚡ Best fee / recovery ratio</div>
+      <div class="hero-route-title">Bundle SOL Tokens</div>
+      <button class="cr-cta-btn hero-cta" id="hero-cta-btn">Recover — → Jupiter Aggregator</button>
+    </div>
+
+    <!-- Other routes -->
+    <div class="sec-title fu fu4">Other available routes</div>
+    <div class="minor-routes-grid fu fu4">
+      <div class="cr-card-minor">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+          <div class="cr-card-title">Wrap ETH Dust</div>
+          <span class="cr-save-pill" id="cs-eth">~$0.89 saved</span>
+        </div>
+        <div class="cr-card-desc">SHIB + PEPE + FLOKI → WETH via Uniswap v3. L1 gas ~$0.94. Consider Arbitrum for lower fees.</div>
+        <div class="cr-eff-bar">
+          <div class="cr-eff-label"><span>Efficiency</span><span>52%</span></div>
+          <div class="cr-bar"><div class="cr-fill" style="width:52%"></div></div>
+        </div>
+        <button class="cr-cta-btn">Execute on Uniswap v3 →</button>
+      </div>
+      <div class="cr-card-minor">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+          <div class="cr-card-title">Bridge BSC → ETH</div>
+          <span class="cr-save-pill" id="cs-bsc">gross value</span>
+        </div>
+        <div class="cr-card-desc">CAKE (BSC) → ETH via Stargate Finance. Requires min $0.50 in BSC to cover origin fees.</div>
+        <div class="cr-eff-bar">
+          <div class="cr-eff-label"><span>Efficiency</span><span>28%</span></div>
+          <div class="cr-bar"><div class="cr-fill" style="width:28%"></div></div>
+        </div>
+        <button class="cr-cta-btn">Execute on Stargate Finance →</button>
+      </div>
+    </div>
+
+    <!-- Network status strip -->
+    <div class="net-status-strip fu fu5">
+      <div class="nss-item">
+        <span class="nss-dot nss-green"></span>
+        <span class="nss-label">Solana</span>
+        <span class="nss-val">~0.000025 SOL/tx</span>
+      </div>
+      <div class="nss-sep">·</div>
+      <div class="nss-item">
+        <span class="nss-dot nss-yellow"></span>
+        <span class="nss-label">Ethereum</span>
+        <span class="nss-val" id="eth-gas-val">~12 gwei</span>
+      </div>
+      <div class="nss-sep">·</div>
+      <div class="nss-item">
+        <span class="nss-dot nss-green"></span>
+        <span class="nss-label">BSC</span>
+        <span class="nss-val">~3 gwei</span>
+      </div>
+      <div class="nss-sep">·</div>
+      <div class="nss-item nss-right">
+        <span class="nss-label">Aggregators</span>
+        <span class="nss-val nss-online">Jupiter · Uniswap v3 · Stargate</span>
+      </div>
+    </div>
+
+    <!-- Trust section -->
+    <div class="trust-grid fu fu5">
+
+      <!-- Left: why us -->
+      <div class="trust-left">
+        <div class="trust-heading">Trusted by 40,000+ wallets worldwide</div>
+        <div class="trust-feature">
+          <span class="tf-badge"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="flex-shrink:0;width:14px;height:14px"><path d="M5.8 1L2 5.5h3.2L4.2 9 8 4.5H4.8L5.8 1z" fill="currentColor"/></svg> Instant execution</span>
+          <p>Consolidations settle in a single on-chain transaction using Jupiter and Uniswap v3 batch routing — no intermediate custody, no wrapped steps.</p>
+        </div>
+        <div class="trust-feature">
+          <span class="tf-badge tf-green"><svg width="14" height="14" viewBox="0 0 10 10" fill="none" style="flex-shrink:0"><rect x="2" y="4.5" width="6" height="4.5" rx="1" fill="currentColor" opacity=".85"/><path d="M3.2 4.5V3a1.8 1.8 0 0 1 3.6 0v1.5" stroke="currentColor" stroke-width="1.1" fill="none"/></svg> Non-custodial</span>
+          <p>Your keys never leave your wallet. We only read balances and broadcast pre-signed transactions that you approve — identical to how Uniswap and Jupiter work.</p>
+        </div>
+        <div class="trust-feature">
+          <span class="tf-badge tf-amber"><svg width="14" height="14" viewBox="0 0 10 10" fill="none" style="flex-shrink:0"><circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1.1"/><path d="M3.5 6.2C3.5 6.2 4 7 5 7s1.8-.7 1.8-1.4C6.8 4.5 5 4.5 5 3.2c0-.6.5-1.2 1.3-1.2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/><line x1="5" y1="1.5" x2="5" y2="2.2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/><line x1="5" y1="7.8" x2="5" y2="8.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg> Lowest fees on the market</span>
+          <p>Route engine benchmarks against Paraswap, 1inch, Jupiter and Odos on every scan. You always get the best available fee at execution time.</p>
+        </div>
+        <div class="trust-feature">
+          <span class="tf-badge tf-purple"><svg width="14" height="14" viewBox="0 0 10 10" fill="none" style="flex-shrink:0"><path d="M5 1L1.5 2.8v2.7C1.5 7.4 3 8.9 5 9.5c2-0.6 3.5-2.1 3.5-4V2.8L5 1z" stroke="currentColor" stroke-width="1.1" fill="none"/><path d="M3.2 5l1.2 1.2 2.4-2.4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg> Audited smart contracts</span>
+          <p>Consolidation contracts are verified on Etherscan and Solscan. Source code is public — no proxy patterns, no upgrade keys, no admin backdoors.</p>
+        </div>
+        <div class="trust-compare">
+          <span class="tc-label">Also available via</span>
+          <div class="tc-logos">
+            <span class="tc-logo">Jupiter</span>
+            <span class="tc-sep">·</span>
+            <span class="tc-logo">Uniswap</span>
+            <span class="tc-sep">·</span>
+            <span class="tc-logo">Stargate</span>
+            <span class="tc-sep">·</span>
+            <span class="tc-logo">Odos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: reviews -->
+      <div class="trust-right">
+        <div class="tr-header">
+          <span class="tr-stars">★★★★★</span>
+          <span class="tr-score">4.8 · 2,341 reviews</span>
+        </div>
+        <div class="review-card">
+          <div class="rc-top">
+            <span class="rc-name">Marcus T.</span>
+            <span class="rc-stars">★★★★★</span>
+            <span class="rc-source">Trustpilot</span>
+          </div>
+          <p class="rc-body">"Recovered $47 in dust I completely forgot about. The route calculator found a Jupiter bundle I never would have done manually. Took 8 seconds."</p>
+        </div>
+        <div class="review-card">
+          <div class="rc-top">
+            <span class="rc-name">Selin K.</span>
+            <span class="rc-stars">★★★★★</span>
+            <span class="rc-source">Google</span>
+          </div>
+          <p class="rc-body">"Finally a platform that doesn't ask for seed phrases. Phantom connected in one click, saw my dust instantly. Way better than doing it through exchanges."</p>
+        </div>
+        <div class="review-card">
+          <div class="rc-top">
+            <span class="rc-name">0xd4f...881</span>
+            <span class="rc-stars">★★★★☆</span>
+            <span class="rc-source">on-chain</span>
+          </div>
+          <p class="rc-body">"Compared fees with 1inch before confirming — CryptoResidual was $0.12 cheaper on the same route. Small but real."</p>
+        </div>
+        <div class="review-card">
+          <div class="rc-top">
+            <span class="rc-name">James R.</span>
+            <span class="rc-stars">★★★★★</span>
+            <span class="rc-source">Reddit</span>
+          </div>
+          <p class="rc-body">"Used it after a MEV sandwich attack left WETH dust in my wallet. Recovered $22 in two clicks. Contracts are open source — I checked."</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-footer">
+      CryptoResidual · Read-only · No data stored · Estimated values — not financial advice
+    </div>
+  </div>
+</section>
+
+<!-- ══ GLOBAL: Permanent footer ══ -->
+<footer class="site-footer" id="global-footer">
+  <div class="sf-accordion" id="sfAccordion">
+    <div class="sf-grid">
+      <div>
+        <div class="sf-col-title">FAQ</div>
+        <div class="sf-faq-item">
+          <div class="sf-faq-q">What is a "dust" or residual balance?</div>
+          <div class="sf-faq-a">Tiny token amounts left over from swaps, airdrops, or failed transactions. Collectively they can reach hundreds of dollars.</div>
+        </div>
+        <div class="sf-faq-item">
+          <div class="sf-faq-q">Is my wallet safe?</div>
+          <div class="sf-faq-a">Read-only mode only. We never request private keys, seed phrases, or signing permissions.</div>
+        </div>
+        <div class="sf-faq-item">
+          <div class="sf-faq-q">Which networks are supported?</div>
+          <div class="sf-faq-a">Ethereum, Solana, BNB Smart Chain, and Aptos. Arbitrum, Polygon and Base coming soon.</div>
+        </div>
+      </div>
+      <div>
+        <div class="sf-col-title">Terms of Use</div>
+        <div class="sf-text-block">
+          <p>CryptoResidual is an informational tool. Valuations are estimates and do not constitute financial advice.</p>
+          <p>Users are solely responsible for any on-chain transactions. Gas fees are the user's sole responsibility.</p>
+          <p>CryptoResidual does not execute or broadcast any blockchain transaction on behalf of the user.</p>
+        </div>
+      </div>
+      <div>
+        <div class="sf-col-title">Privacy &amp; Legal</div>
+        <div class="sf-text-block">
+          <p>We do not collect, store, or sell personal data. Addresses are processed transiently and not retained.</p>
+          <p>Analytics cookies may be used to improve performance. You may opt out via the cookie consent panel.</p>
+          <p>CryptoResidual is not affiliated with any mentioned exchanges or protocols.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sf-bar">
+    <span class="sf-copy">© 2025 CryptoResidual · All rights reserved · Not financial advice</span>
+    <div class="sf-links">
+      <button class="sf-link-btn" onclick="toggleSfSection('faq',this)">FAQ</button>
+      <button class="sf-link-btn" onclick="toggleSfSection('terms',this)">Terms</button>
+      <button class="sf-link-btn" onclick="toggleSfSection('privacy',this)">Privacy</button>
+      <button class="sf-link-btn" onclick="toggleSfSection('cookies',this)">Cookies</button>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ GLOBAL: Dashboard price ticker (left, rotates on dashboard) ══ -->
+<div id="dash-ticker" style="display:none">
+  <div class="dt-label">LIVE PRICES</div>
+  <div class="dt-viewport">
+    <div class="dt-track" id="dtTrack">
+      <div class="pt-card pt-btc"><div class="pt-row1"><span class="pt-name">BTC</span><span class="pt-pct" id="dtPctBTC">—</span></div><div class="pt-price" id="dtPriceBTC">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-eth"><div class="pt-row1"><span class="pt-name">ETH</span><span class="pt-pct" id="dtPctETH">—</span></div><div class="pt-price" id="dtPriceETH">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-sol"><div class="pt-row1"><span class="pt-name">SOL</span><span class="pt-pct" id="dtPctSOL">—</span></div><div class="pt-price" id="dtPriceSOL">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-bnb"><div class="pt-row1"><span class="pt-name">BNB</span><span class="pt-pct" id="dtPctBNB">—</span></div><div class="pt-price" id="dtPriceBNB">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-xrp"><div class="pt-row1"><span class="pt-name">XRP</span><span class="pt-pct" id="dtPctXRP">—</span></div><div class="pt-price" id="dtPriceXRP">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-ada"><div class="pt-row1"><span class="pt-name">ADA</span><span class="pt-pct" id="dtPctADA">—</span></div><div class="pt-price" id="dtPriceADA">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-avax"><div class="pt-row1"><span class="pt-name">AVAX</span><span class="pt-pct" id="dtPctAVAX">—</span></div><div class="pt-price" id="dtPriceAVAX">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-doge"><div class="pt-row1"><span class="pt-name">DOGE</span><span class="pt-pct" id="dtPctDOGE">—</span></div><div class="pt-price" id="dtPriceDOGE">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-link"><div class="pt-row1"><span class="pt-name">LINK</span><span class="pt-pct" id="dtPctLINK">—</span></div><div class="pt-price" id="dtPriceLINK">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-dot"><div class="pt-row1"><span class="pt-name">DOT</span><span class="pt-pct" id="dtPctDOT">—</span></div><div class="pt-price" id="dtPriceDOT">—</div><div class="pt-label">24h</div></div>
+      <!-- duplicate for seamless loop -->
+      <div class="pt-card pt-btc"><div class="pt-row1"><span class="pt-name">BTC</span><span class="pt-pct" id="dtPctBTC2">—</span></div><div class="pt-price" id="dtPriceBTC2">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-eth"><div class="pt-row1"><span class="pt-name">ETH</span><span class="pt-pct" id="dtPctETH2">—</span></div><div class="pt-price" id="dtPriceETH2">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-sol"><div class="pt-row1"><span class="pt-name">SOL</span><span class="pt-pct" id="dtPctSOL2">—</span></div><div class="pt-price" id="dtPriceSOL2">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-bnb"><div class="pt-row1"><span class="pt-name">BNB</span><span class="pt-pct" id="dtPctBNB2">—</span></div><div class="pt-price" id="dtPriceBNB2">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-xrp"><div class="pt-row1"><span class="pt-name">XRP</span><span class="pt-pct" id="dtPctXRP2">—</span></div><div class="pt-price" id="dtPriceXRP2">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-ada"><div class="pt-row1"><span class="pt-name">ADA</span><span class="pt-pct" id="dtPctADA2">—</span></div><div class="pt-price" id="dtPriceADA2">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-avax"><div class="pt-row1"><span class="pt-name">AVAX</span><span class="pt-pct" id="dtPctAVAX2">—</span></div><div class="pt-price" id="dtPriceAVAX2">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-doge"><div class="pt-row1"><span class="pt-name">DOGE</span><span class="pt-pct" id="dtPctDOGE2">—</span></div><div class="pt-price" id="dtPriceDOGE2">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-link"><div class="pt-row1"><span class="pt-name">LINK</span><span class="pt-pct" id="dtPctLINK2">—</span></div><div class="pt-price" id="dtPriceLINK2">—</div><div class="pt-label">24h</div></div>
+      <div class="pt-card pt-dot"><div class="pt-row1"><span class="pt-name">DOT</span><span class="pt-pct" id="dtPctDOT2">—</span></div><div class="pt-price" id="dtPriceDOT2">—</div><div class="pt-label">24h</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Cookie consent modal -->
+<div class="ck-overlay hidden" id="ck-overlay">
+  <div id="cookie-banner">
+    <div class="ck-top">
+      <span class="ck-icon">🍪</span>
+      <div class="ck-text">
+        <strong>We use cookies</strong>
+        We use analytics cookies to improve your experience and measure platform performance. Essential cookies are required for the platform to function. You can review our <a href="#">Cookie Policy</a> and <a href="#">Privacy Policy</a> at any time.
+      </div>
+    </div>
+    <div class="ck-btns">
+      <button class="ck-accept" onclick="acceptCookies()">Accept all</button>
+      <button class="ck-reject" onclick="rejectCookies()">Essential only</button>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile forum drawer -->
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 4 · FORUM POST
+══════════════════════════════════════════════ -->
+<section class="screen" id="screen-post">
+  <nav class="post-nav">
+    <button class="post-nav-back" onclick="closePost()">← Volver</button>
+    <span class="post-nav-sep">·</span>
+    <span class="post-nav-source" id="postNavBadge"></span>
+    <span class="post-nav-cat" id="postNavCat"></span>
+  </nav>
+  <div class="post-body-wrap">
+    <div id="postBody"></div>
+  </div>
+</section>
+
+<!-- Mobile-only PC required popup -->
+<div id="mobile-gate" style="display:none">
+  <div class="mg-backdrop"></div>
+  <div class="mg-card">
+    <div class="mg-icon">
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="8" width="56" height="36" rx="4" stroke="#0EA5E9" stroke-width="2.5"/>
+        <rect x="20" y="44" width="24" height="4" fill="#0EA5E9" opacity=".4"/>
+        <rect x="14" y="48" width="36" height="3" rx="1.5" fill="#0EA5E9" opacity=".25"/>
+        <path d="M24 26l5 5 11-11" stroke="#0EA5E9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="mg-badge">Desktop only</div>
+    <h2 class="mg-title">Open on your computer</h2>
+    <p class="mg-body">All transactions, wallet connections and asset recovery are <strong>only available on desktop</strong>. Mobile browsing is view-only for security reasons.</p>
+    <div class="mg-url" id="mgUrl"></div>
+    <p class="mg-hint">Type the address above in your desktop browser to get started.</p>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
