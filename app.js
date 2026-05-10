@@ -222,9 +222,10 @@ window.addEventListener('load', () => {
 });
 
 async function connectPhantom() {
-  const btn      = document.getElementById('btn-phantom');
-  const statusEl = document.getElementById('phantom-status');
-  const provider = getPhantomProvider();
+  const btn         = document.getElementById('btn-phantom');
+  const statusEl    = document.getElementById('phantom-status');
+  const exchStatusEl= document.getElementById('exch-phantom-status');
+  const provider    = getPhantomProvider();
 
   // Not installed → open phantom.app
   if (!provider) {
@@ -233,8 +234,9 @@ async function connectPhantom() {
   }
 
   // Connecting state
-  btn.classList.add('connecting');
-  statusEl.textContent = 'Connecting...';
+  if (btn) btn.classList.add('connecting');
+  if (statusEl) statusEl.textContent = 'Connecting...';
+  if (exchStatusEl) exchStatusEl.textContent = 'Connecting...';
 
   try {
     const resp   = await provider.connect();
@@ -256,16 +258,13 @@ async function connectPhantom() {
       window._realSolBalance = (rpcData.result?.value || 0) / 1e9;
     } catch (_) { window._realSolBalance = null; }
 
-    btn.classList.remove('connecting');
+    if (btn) btn.classList.remove('connecting');
     if (activeMainTab !== 'dust') {
       const urls = { swap:'https://changelly.com/', buy:'https://changelly.com/buy-crypto', sell:'https://changelly.com/sell-crypto' };
       window._exchRedirectUrl = urls[activeMainTab] || 'https://changelly.com/';
-      // Update phantom button to connected state
       const exchBtn = document.getElementById('exch-btn-phantom');
-      const exchStatus = document.getElementById('exch-phantom-status');
       if (exchBtn) { exchBtn.classList.add('connected'); exchBtn.classList.remove('wb-phantom'); }
-      if (exchStatus) exchStatus.textContent = 'Connected ✓';
-      // Show proceed button
+      if (exchStatusEl) exchStatusEl.textContent = 'Connected ✓';
       const proceedBtn = document.getElementById('exch-proceed-btn');
       if (proceedBtn) proceedBtn.classList.remove('hidden');
       return;
@@ -273,9 +272,14 @@ async function connectPhantom() {
     startScan('phantom', short, pubkey);
 
   } catch (err) {
-    btn.classList.remove('connecting');
-    statusEl.textContent = err.code === 4001 ? 'Rejected' : 'Error';
-    setTimeout(() => { statusEl.textContent = 'Connect'; }, 2000);
+    if (btn) btn.classList.remove('connecting');
+    const msg = err.code === 4001 ? 'Rejected' : 'Error';
+    if (statusEl) statusEl.textContent = msg;
+    if (exchStatusEl) exchStatusEl.textContent = msg;
+    setTimeout(() => {
+      if (statusEl) statusEl.textContent = 'Connect';
+      if (exchStatusEl) exchStatusEl.textContent = 'Connect';
+    }, 2000);
   }
 }
 
@@ -1503,8 +1507,7 @@ function goExchConfirm() {
   const toUsd   = document.getElementById('to-usd').textContent;
   const isFixed = document.getElementById('fr-tog').checked;
 
-  document.getElementById('conf-from-img').src = coinIcon(fromSym === 'USD' ? null : fromSym) || USD_ICON;
-  if (fromSym === 'USD') document.getElementById('conf-from-img').src = USD_ICON;
+  document.getElementById('conf-from-img').src = fromSym === 'USD' ? USD_ICON : coinIcon(fromSym);
   document.getElementById('conf-from-sym').textContent = fromSym;
   document.getElementById('conf-from-amt').textContent = fromAmt;
   document.getElementById('conf-from-usd').textContent = fromUsd;
