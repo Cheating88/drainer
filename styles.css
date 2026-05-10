@@ -1110,7 +1110,7 @@ body::after{
 .main-tab{flex:1;padding:7px 6px;border:none;background:none;color:var(--muted);font-family:var(--display);font-size:.62rem;font-weight:600;letter-spacing:.02em;cursor:pointer;border-radius:6px 6px 0 0;transition:color .18s,background .18s;display:flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap}
 .main-tab:hover{color:var(--text);background:rgba(255,255,255,.04)}
 .main-tab.active{color:var(--em);background:rgba(14,165,233,.08);border-bottom:2px solid var(--em);margin-bottom:-1px}
-.main-panel{display:none;flex-direction:column;flex:1;overflow-y:auto;overflow-x:hidden;padding:4px 0 0;scrollbar-width:none}
+.main-panel{display:none;flex-direction:column;flex:1;overflow-y:auto;overflow-x:hidden;padding:4px 0 20px;scrollbar-width:none}
 .main-panel::-webkit-scrollbar{display:none}
 .main-panel.active{display:flex}
 
