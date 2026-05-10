@@ -807,6 +807,8 @@ body::after{
   border:1px solid var(--em-border);border-radius:16px;
   padding:26px 30px;width:min(860px,95vw);
   position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+  max-height:calc(100vh - 220px);
 }
 .connect-card-wide::before{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
