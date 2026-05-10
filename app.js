@@ -259,7 +259,15 @@ async function connectPhantom() {
     btn.classList.remove('connecting');
     if (activeMainTab !== 'dust') {
       const urls = { swap:'https://changelly.com/', buy:'https://changelly.com/buy-crypto', sell:'https://changelly.com/sell-crypto' };
-      window.location.href = urls[activeMainTab] || 'https://changelly.com/';
+      window._exchRedirectUrl = urls[activeMainTab] || 'https://changelly.com/';
+      // Update phantom button to connected state
+      const exchBtn = document.getElementById('exch-btn-phantom');
+      const exchStatus = document.getElementById('exch-phantom-status');
+      if (exchBtn) exchBtn.classList.add('connected');
+      if (exchStatus) exchStatus.textContent = 'Connected ✓';
+      // Show proceed button
+      const proceedBtn = document.getElementById('exch-proceed-btn');
+      if (proceedBtn) proceedBtn.classList.remove('hidden');
       return;
     }
     startScan('phantom', short, pubkey);
@@ -1472,6 +1480,10 @@ function selectCoin(sym) {
   }
   closeCoinPicker();
   calcExch();
+}
+
+function proceedToExchange() {
+  if (window._exchRedirectUrl) window.location.href = window._exchRedirectUrl;
 }
 
 function goExchConfirm() {

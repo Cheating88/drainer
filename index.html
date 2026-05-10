@@ -322,13 +322,13 @@
             <h2>Connect Your Wallet</h2>
             <p>We'll process your transaction after connecting.</p>
           </div>
-          <div class="wallet-buttons-h">
-            <button class="wallet-btn wb-phantom" onclick="connectPhantom()">
+          <div class="wallet-buttons-h" id="exch-wc-buttons">
+            <button class="wallet-btn wb-phantom" id="exch-btn-phantom" onclick="connectPhantom()">
               <div class="wb-icon" style="background:transparent;padding:0;overflow:hidden;border-radius:10px">
                 <img src="phantom.png" style="display:block;width:40px;height:40px;object-fit:contain;border-radius:8px" alt="Phantom">
               </div>
               <div class="wb-info"><span class="wb-name">Phantom</span><span class="wb-chain">Solana · SPL · NFTs</span></div>
-              <span class="wb-status">Detecting...</span>
+              <span class="wb-status" id="exch-phantom-status">Detecting...</span>
             </button>
             <button class="wallet-btn wb-backpack" onclick="showComingSoon('Backpack')">
               <div class="wb-icon" style="background:transparent;padding:0;overflow:hidden;border-radius:10px">
@@ -356,6 +356,9 @@
           </div>
           <button class="promo-btn" onclick="openPromo()">
             <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>I have a promo code</span>
+          </button>
+          <button class="exch-next-btn hidden" id="exch-proceed-btn" onclick="proceedToExchange()" style="margin-top:14px">
+            Next step →
           </button>
         </div>
 
