@@ -111,7 +111,7 @@ body::after{
 /* ══════════════════════════════════════
    SCREEN 1 · CONNECT
 ══════════════════════════════════════ */
-.brand{text-align:center;margin-bottom:clamp(10px,1.5dvh,28px);animation:fadeUp .7s ease both}
+.brand{text-align:center;margin-bottom:clamp(8px,1dvh,20px);animation:fadeUp .7s ease both}
 
 .brand-icon{
   width:54px;height:54px;margin:0 auto 18px;
@@ -123,7 +123,7 @@ body::after{
 
 @property --neon-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
 .brand-name{
-  font-family:var(--display);font-size:2.35rem;font-weight:700;
+  font-family:var(--display);font-size:clamp(1.6rem,3dvh,2.35rem);font-weight:700;
   letter-spacing:-.01em;color:var(--white);line-height:1;margin-bottom:8px;
   position:relative;display:inline-block;
   animation:textGlow 3s ease-in-out infinite;
@@ -703,7 +703,7 @@ body::after{
 .connect-top{
   flex:1;min-height:0;
   display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
-  padding:clamp(10px,1.5dvh,28px) 32px clamp(8px,1dvh,16px);
+  padding:clamp(8px,1dvh,24px) 32px clamp(6px,0.8dvh,12px);
   position:relative;
 }
 .price-tracker{
@@ -788,7 +788,7 @@ body::after{
 .ex-role{font-size:.5rem;color:var(--muted);letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 @media(max-width:1100px){.ex-ticker{display:none}}
 .connect-bottom{
-  height:max(220px,28dvh);min-height:220px;flex-shrink:0;
+  height:max(200px,24dvh);min-height:200px;flex-shrink:0;
   display:grid;grid-template-columns:1fr 1fr;
   border-top:1px solid rgba(14,165,233,.1);
 }
@@ -902,7 +902,7 @@ body::after{
 .other-wallet-btn svg{flex-shrink:0}
 .promo-btn{
   display:flex;align-items:center;justify-content:center;
-  width:100%;margin-top:18px;
+  width:100%;margin-top:clamp(5px,0.9dvh,14px);
   background:none;border:none;
   color:var(--em);font-family:var(--mono);font-size:.62rem;font-weight:600;
   letter-spacing:.04em;cursor:pointer;padding:4px 0;
@@ -963,7 +963,7 @@ body::after{
 /* ─── Feed Section Header ─── */
 .feed-section-hdr{
   flex-shrink:0;align-self:stretch;text-align:center;
-  padding:clamp(8px,1dvh,16px) 40px clamp(6px,0.8dvh,14px);
+  padding:clamp(6px,0.7dvh,14px) 40px clamp(4px,0.5dvh,10px);
 }
 .fsh-label{
   display:block;font-size:.5rem;letter-spacing:.28em;
@@ -1111,9 +1111,9 @@ body::after{
 }
 
 /* ─── Main Tabs ─── */
-.main-tabs{display:flex;gap:6px;padding:0 0 clamp(8px,1.5dvh,14px);margin-bottom:2px;flex-shrink:0}
+.main-tabs{display:flex;gap:6px;padding:0 0 clamp(6px,1dvh,12px);margin-bottom:2px;flex-shrink:0}
 .main-tab{
-  flex:1;padding:10px 6px 9px;border:1px solid rgba(255,255,255,.09);
+  flex:1;padding:clamp(6px,1dvh,10px) 6px clamp(5px,0.9dvh,9px);border:1px solid rgba(255,255,255,.09);
   background:rgba(255,255,255,.03);
   color:var(--muted);font-family:var(--display);font-size:.62rem;font-weight:700;
   letter-spacing:.02em;cursor:pointer;border-radius:10px;
@@ -1142,7 +1142,7 @@ body::after{
 .exch-step.hidden{display:none}
 .hidden{display:none!important}
 #exch-s-confirm .exch-next-btn{margin-top:6px}
-.exch-step-hdr{padding:8px 0 10px;display:flex;flex-direction:column;gap:5px}
+.exch-step-hdr{padding:clamp(4px,0.7dvh,8px) 0 clamp(6px,1dvh,10px);display:flex;flex-direction:column;gap:4px}
 .exch-step-info{display:flex;align-items:center;gap:7px}
 .exch-sn{font-size:.58rem;font-weight:700;color:var(--em);background:rgba(14,165,233,.12);border:1px solid rgba(14,165,233,.22);border-radius:4px;padding:1px 6px;letter-spacing:.04em}
 .exch-st{font-size:.72rem;font-weight:700;color:var(--text);letter-spacing:.01em}
@@ -1150,13 +1150,13 @@ body::after{
 .exch-prog-fill{height:100%;background:linear-gradient(90deg,var(--em),#38bdf8);border-radius:2px;transition:width .4s ease}
 
 /* ─── Pair boxes ─── */
-.pair-box{background:rgba(6,12,24,.6);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px 12px 8px;margin-bottom:4px}
-.pair-label{font-size:.52rem;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px}
+.pair-box{background:rgba(6,12,24,.6);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:clamp(6px,1dvh,10px) 12px clamp(4px,0.7dvh,8px);margin-bottom:3px}
+.pair-label{font-size:.52rem;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:clamp(3px,0.5dvh,6px)}
 .pair-row{display:flex;align-items:center;gap:8px}
 .pair-input{flex:1;background:none;border:none;outline:none;font-family:var(--display);font-size:.95rem;font-weight:700;color:var(--white);text-align:right;min-width:0;-moz-appearance:textfield}
 .pair-input::-webkit-outer-spin-button,.pair-input::-webkit-inner-spin-button{-webkit-appearance:none}
 .pair-output{flex:1;font-family:var(--display);font-size:.95rem;font-weight:700;color:var(--white);text-align:right;min-width:0;word-break:break-all}
-.pair-sub{font-size:.52rem;color:var(--muted);text-align:right;margin-top:3px}
+.pair-sub{font-size:.52rem;color:var(--muted);text-align:right;margin-top:2px}
 .coin-sel{display:flex;align-items:center;gap:5px;background:rgba(14,165,233,.07);border:1px solid rgba(14,165,233,.16);border-radius:8px;padding:5px 8px;cursor:pointer;transition:background .18s,border-color .18s;flex-shrink:0}
 .coin-sel:hover{background:rgba(14,165,233,.13);border-color:rgba(14,165,233,.28)}
 .coin-sel:disabled{opacity:.5;cursor:default;pointer-events:none}
@@ -1169,7 +1169,7 @@ body::after{
 .flip-btn:hover{color:var(--em);border-color:rgba(14,165,233,.3);transform:rotate(180deg)}
 
 /* ─── Fixed Rate ─── */
-.fixed-rate-row{display:flex;align-items:center;gap:8px;padding:8px 0 4px}
+.fixed-rate-row{display:flex;align-items:center;gap:8px;padding:clamp(4px,0.7dvh,8px) 0 clamp(2px,0.4dvh,4px)}
 .tog{position:relative;display:inline-flex;align-items:center;cursor:pointer;flex-shrink:0}
 .tog input{position:absolute;opacity:0;width:0;height:0}
 .tog-track{width:32px;height:17px;background:rgba(255,255,255,.1);border-radius:9px;position:relative;transition:background .2s}
@@ -1180,7 +1180,7 @@ body::after{
 .fr-info{color:var(--muted);cursor:help;display:flex;align-items:center}
 
 /* ─── Exchange Next button ─── */
-.exch-next-btn{width:100%;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--em),#0284c7);color:#fff;font-family:var(--display);font-size:.82rem;font-weight:700;letter-spacing:.04em;cursor:pointer;margin-top:8px;transition:opacity .18s,transform .18s;flex-shrink:0}
+.exch-next-btn{width:100%;padding:clamp(8px,1.2dvh,12px);border:none;border-radius:10px;background:linear-gradient(135deg,var(--em),#0284c7);color:#fff;font-family:var(--display);font-size:.82rem;font-weight:700;letter-spacing:.04em;cursor:pointer;margin-top:clamp(4px,0.8dvh,8px);transition:opacity .18s,transform .18s;flex-shrink:0}
 .exch-next-btn:hover{opacity:.9;transform:translateY(-1px)}
 
 /* ─── Back step button ─── */
@@ -1591,8 +1591,8 @@ body::after{
 .wallet-btn.connected .wb-status{color:#22c55e;background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.2)}
 
 /* ─── Step 3 compact list ─── */
-.exch-wc-list{display:flex;flex-direction:column;gap:5px;margin:10px 0 0}
-.exch-wc-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02);cursor:pointer;transition:background .15s,border-color .15s;text-align:left;width:100%}
+.exch-wc-list{display:flex;flex-direction:column;gap:clamp(3px,0.5dvh,5px);margin:clamp(6px,1dvh,10px) 0 0}
+.exch-wc-row{display:flex;align-items:center;gap:10px;padding:clamp(5px,0.9dvh,8px) 12px;border-radius:9px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02);cursor:pointer;transition:background .15s,border-color .15s;text-align:left;width:100%}
 .exch-wc-row:hover{background:rgba(14,165,233,.06);border-color:rgba(14,165,233,.2)}
 .exch-wc-row.connected{border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.06)}
 .ewc-icon{width:28px;height:28px;border-radius:7px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center}
@@ -1602,7 +1602,7 @@ body::after{
 .ewc-name{display:block;font-size:.7rem;font-weight:700;color:var(--white)}
 .ewc-chain{display:block;font-size:.5rem;color:var(--muted);margin-top:1px}
 .exch-wc-other .ewc-name{color:var(--muted)}
-.exch-wc-footer{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.exch-wc-footer{margin-top:clamp(6px,1dvh,10px);display:flex;flex-direction:column;gap:clamp(4px,0.6dvh,6px)}
 .exch-wc-footer .promo-btn{margin-top:0}
 #exch-proceed-btn{margin-top:0}
 
